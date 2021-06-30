@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react"
+import { useState, useEffect } from "react"
 import { firebaseStore } from "./firebase";
 
 function App() {
@@ -7,11 +7,10 @@ function App() {
 
   useEffect(() => {
     const searchTime = async() => {
-      // Firestoreのコレクションを指定してデータ取得。今回は全量を検索
       const res = await firebaseStore.collection('time').get();
       if (res.empty) return [];
+
       let timeList = [];
-      // DocumentData型にはmapメソッドが定義されていないため、forEachのループでデータを加工
       res.forEach(doc => {
         timeList.push(doc.data());
       })
@@ -23,14 +22,14 @@ function App() {
     setLoading(false);
   }, []);
 
+
   return (
     <div style={{ textAlign:"center", verticalAlign:"middle" }}>
-      <div>
-        class{time && time[0] && time[0].class}{" "}{time && time[0] && time[0].hour}時{time && time[0] && time[0].minute}分
-      </div>
-      <div>
-        class{time && time[1] && time[1].class}{" "}{time && time[1] && time[1].hour}時{time && time[1] && time[1].minute}分
-      </div>
+      {!loading && time.map((item) => (
+        <div key={item.class}>
+          class{item.class}{" "}{item.hour}時{item.minute}分
+        </div>
+      ))}
     </div>
   );
 }
